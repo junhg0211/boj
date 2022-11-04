@@ -1,4 +1,7 @@
-a, b = input().split()
-a, b = int(a), int(b)
+numbers = input().split()
+
+a = int(numbers[0])
+b = int(numbers[1])
 
 print(a + b)
+
