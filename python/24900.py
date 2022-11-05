@@ -1,5 +1,4 @@
-print(R'''\
-                                                           :8DDDDDDDDDDDDDD$.                                           
+print(r'''                                                           :8DDDDDDDDDDDDDD$.                                           
                                                       DDDNNN8~~~~~~~~~~=~7DNNDNDDDNNI                                   
                                                   ?NNDD=~=~~~~~~~~~~~~~~~~~=~~==~=INNDNN7                               
                                                +NDDI~~~~~~~~~~~~~~~~~~~~~~~=~~========~ODND+                            
