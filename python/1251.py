@@ -1,10 +1,21 @@
-word = input()
+def words(word: str):
+    length = len(word)
+    for i in range(1, length - 1):
+        for j in range(i+1, length):
+            result = word[:i][::-1] + word[i:j][::-1] + word[j:][::-1]
+            yield result
 
-s1 = word[1:-2].index(min(word[1:-2])) + 2
 
-part = word[s1:]
+def main():
+    word = input()
 
-s2 = part[1:-1].index(min(part[1:-1])) + 2 + s1
+    first = None
+    for word in words(word):
+        if first is None or word < first:
+            first = word
 
-print(word[:s1][::-1] + word[s1:s2][::-1] + word[s2:][::-1])
+    print(first)
 
+
+if __name__ == '__main__':
+    main()
