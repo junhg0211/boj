@@ -40,6 +40,7 @@ def synthetic_division(a, b, c, d, t) -> tuple[int, int]:
 
     return qb, qc
 
+
 def tick():
     a, b, c, d = map(int, input().split())
 
