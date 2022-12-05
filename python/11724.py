@@ -1,18 +1,22 @@
+from collections import deque
+
+
 def exclude_connection(connection, start_node):
     if start_node not in connection:
         return
 
-    queue = [start_node]
+    queue = deque([start_node])
 
     while queue:
-        now = queue.pop(0)
+        now = queue.popleft()
         if now not in connection:
             continue
         connecteds = connection.pop(now)
         for connected in connecteds:
             if connected == start_node:
                 continue
-            queue.append(connected)
+            if connected in connection:
+                queue.append(connected)
 
 
 def main():
