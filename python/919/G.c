@@ -12,7 +12,7 @@ void tick()
     }
     variance /= 5000;
 
-    if (fabs(1/12 - variance) > fabs(0.1 - variance))
+    if (fabs(1/12 - variance) > fabs(0.06 - variance))
     {
         printf("A\n");
     }
