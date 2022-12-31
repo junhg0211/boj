@@ -1,0 +1,29 @@
+from collections import deque
+from math import inf
+
+
+def main():
+    _, k = map(int, input().split())
+
+    numbers = map(int, input().split())
+
+    history = deque()
+
+    for _ in range(k):
+        history.append(next(numbers))
+
+    sum_ = sum(history)
+    max_sum = sum_
+
+    for number in numbers:
+        history.append(number)
+        sum_ -= history.popleft()
+        sum_ += number
+
+        max_sum = max(sum_, max_sum)
+
+    print(max_sum)
+
+
+if __name__ == '__main__':
+    main()
