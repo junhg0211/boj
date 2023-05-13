@@ -1,1 +1,1 @@
-rustc $1.rs && ./$1 && rm ./$1
+rustc $1 -o a.out && ./a.out && rm a.out
