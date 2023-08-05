@@ -1,15 +1,5 @@
 use std::io::stdin;
 
-fn reverse_number(mut number: i32) -> i32 {
-    let mut result = 0;
-    while number > 0 {
-        let digit = number % 10;
-        result = result * 10 + digit;
-        number /= 10;
-    }
-    result
-}
-
 fn is_square(number: i32) -> bool {
     (number as f64).sqrt().round().powf(2.0) as i32 == number
 }
@@ -54,7 +44,7 @@ fn main() {
                 continue;
             }
 
-            let mut number: i32 = 0;
+            let mut number = String::new();
             let mut k = 0;
             // generate number and check if it is a square
             while i + k * dy < height && j as i32 + k * dx < width {
@@ -64,15 +54,17 @@ fn main() {
                     break;
                 }
 
-                number = number * 10 + matrix[y][x];
+                // number = number * 10 + matrix[y][x];
+                number.push_str(&matrix[y][x].to_string());
                 k += 1;
 
-                if number > result && is_square(number) {
-                    result = number;
+                let number_parsed = number.parse().unwrap();
+                if number_parsed > result && is_square(number_parsed) {
+                    result = number_parsed;
                 }
                 // println!("({},{}), ({},{}), {}", j, i, dx, dy, number);
 
-                let another = reverse_number(number);
+                let another = number.chars().rev().collect::<String>().parse().unwrap();
                 if another > result && is_square(another) {
                     result = another;
                 }
