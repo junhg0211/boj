@@ -1,4 +1,4 @@
-use std:io::stdin;
+use std::io::stdin;
 use std::collections::HashMap;
 
 fn main() {
