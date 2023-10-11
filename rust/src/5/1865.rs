@@ -1,7 +1,7 @@
 use std::io::stdin;
-use std::collections::HashMap;
+use std::collections::{ HashMap, HashSet };
 
-fn bf(start: i32, node_count: usize, connections: &HashMap<i32, Vec<(i32, i32)>>) -> bool {
+fn bf(start: i32, node_count: usize, connections: &HashMap<i32, Vec<(i32, i32)>>) -> (bool, Option<HashSet<i32>>) {
     let mut distances = HashMap::new();
     distances.insert(start, 0);
 
@@ -33,14 +33,14 @@ fn bf(start: i32, node_count: usize, connections: &HashMap<i32, Vec<(i32, i32)>>
 
                     if i == node_count {
                         // println!("{} {} {} {}", node, connected_node, original_distance, this_distance);
-                        return true;
+                        return (true, None);
                     }
                 }
             }
         }
     }
 
-    return false;
+    return (false, Some(distances.into_keys().collect::<HashSet<i32>>()));
 }
 
 fn tick() {
@@ -78,7 +78,7 @@ fn tick() {
 
         match connections.get_mut(&end) {
             Some(thing) => thing.push((start, weight)),
-            None => { connections.insert(start, vec![(start, weight)]); },
+            None => { connections.insert(end, vec![(start, weight)]); },
         }
     }
 
@@ -103,10 +103,26 @@ fn tick() {
 
     // -- bellman-ford
     let mut negative_infinite = false;
+    let mut beens = HashSet::new();
     for i in 1..=node_count as i32 {
-        negative_infinite = bf(i, node_count, &connections) || negative_infinite;
-        if negative_infinite {
+        if beens.contains(&i) {
+            continue;
+        }
+
+        let (result, this_beens) = bf(i, node_count, &connections);
+
+        if result {
+            negative_infinite = true;
             break;
+        }
+
+        match this_beens {
+            Some(things) => {
+                for thing in things {
+                    beens.insert(thing);
+                }
+            },
+            None => ()
         }
     }
 
