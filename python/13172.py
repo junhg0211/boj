@@ -1,4 +1,4 @@
-DIVISOR = 10
+DIVISOR = 1000000007
 
 
 def eea(t, s):
