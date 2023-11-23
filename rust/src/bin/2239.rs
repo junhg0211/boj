@@ -1,7 +1,26 @@
 use std::io::stdin;
-use std::collections::{ HashMap, HashSet };
+use std::collections::HashSet;
+
+fn remove(from: &mut Vec<u32>, obj: u32) {
+    for i in 0..from.len() {
+        if from[i] == obj {
+            from.swap_remove(i);
+            return;
+        }
+    }
+}
+
+fn print_board(board: &Vec<Vec<u32>>) {
+    for row in board.iter() {
+        for &letter in row.iter() {
+            print!("{}", letter);
+        }
+        println!();
+    }
+}
 
 fn main() {
+    // -- get board
     let mut board = Vec::new();
     for _ in 0..9 {
         let mut input = String::new();
@@ -9,12 +28,13 @@ fn main() {
         let row = input
             .trim()
             .chars()
-            .map(|x| x as usize - '0' as usize)
+            .map(|x| x as u32 - '0' as u32)
             .collect::<Vec<_>>();
         board.push(row);
     }
 
-    let mut noses: HashMap<(usize, usize), Vec<usize>> = HashMap::new();
+    let mut assertions = Vec::new();
+    let mut nos = HashSet::new();
     let mut i = 0;
     while i < 9 {
         let mut j = 0;
@@ -24,39 +44,50 @@ fn main() {
                 continue;
             }
 
-            // possibles
-            let mut possibles = vec![true; 9];
+            // -- get possibilities
+            let mut possibles = (1..=9).collect::<Vec<_>>();
             for k in 0..9 {
-                if board[i][k] != 0 {
-                    possibles[board[i][k]-1] = false;
-                }
-                if board[k][j] != 0 {
-                    possibles[board[k][j]-1] = false;
-                }
+                // remove from same row and column
+                remove(&mut possibles, board[i][k]);
+                remove(&mut possibles, board[k][j]);
 
+                // remove from same subsquare
                 let y = i/3*3 + k/3;
                 let x = j/3*3 + k%3;
-                if board[y][x] != 0 {
-                    possibles[board[y][x]-1] = false;
+                remove(&mut possibles, board[y][x]);
+
+                // remove from nos
+                if nos.contains(&(i, j, (k+1) as u32)) {
+                    remove(&mut possibles, (k+1) as u32);
                 }
             }
-            let empty_vector = Vec::new();
-            let nos = noses.get(&(i, j)).unwrap_or(&empty_vector);
-            let mut possibles = possibles
-                .iter()
-                .enumerate()
-                .filter(|x| *x.1 && !nos.contains(&(x.0+1)))
-                .map(|x| x.0 + 1)
-                .collect::<Vec<_>>();
             possibles.sort();
 
-            println!("{:?}", possibles);
+            // if `possibles` is not empty, select one and push stack
+            if possibles.len() > 0 {
+                assertions.push((i, j, possibles[0]));
+                board[i][j] = possibles[0];
+            }
+            // if `possibles` is empty, pop stack and process next scenario
+            else {
+                // remove this nos
+                for k in 1..=9 {
+                    nos.remove(&(i, j, k));
+                }
 
+                // pop from stack
+                let (y, x, thing) = assertions.pop().unwrap();
+                board[y][x] = 0;
+                nos.insert((y, x, thing));
+                (i, j) = (y, x);
+                continue;
+            }
+
+            // process next loop
             j += 1;
         }
-
         i += 1;
     }
 
-    println!("{:?}", board);
+    print_board(&board);
 }
