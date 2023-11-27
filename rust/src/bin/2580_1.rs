@@ -1,19 +1,15 @@
 use std::io::stdin;
-use std::collections::HashSet;
 
-fn remove(from: &mut Vec<u32>, obj: u32) {
-    for i in 0..from.len() {
-        if from[i] == obj {
-            from.swap_remove(i);
-            return;
-        }
+fn remove(from: &mut Vec<usize>, obj: usize) {
+    if let Some(index) = from.iter().position(|v| *v == obj) {
+        from.swap_remove(index);
     }
 }
 
-fn print_board(board: &Vec<Vec<u32>>) {
+fn print_board(board: &Vec<Vec<usize>>) {
     for row in board.iter() {
         for &letter in row.iter() {
-            print!("{}", letter);
+            print!("{} ", letter);
         }
         println!();
     }
@@ -28,8 +24,8 @@ fn main() {
         stdin().read_line(&mut input).unwrap();
         let row = input
             .trim()
-            .chars()
-            .map(|x| x as u32 - '0' as u32)
+            .split_whitespace()
+            .map(|x| x.parse::<usize>().unwrap())
             .collect::<Vec<_>>();
 
         for (j, &number) in row.iter().enumerate() {
@@ -42,12 +38,10 @@ fn main() {
     }
 
     let mut assertions = Vec::new();
-    let mut nos = HashSet::new();
+    let mut nos = vec![vec![false; 9]; zeros.len()];
     let mut index = 0;
     let mut possibles = Vec::new();
     while index < zeros.len() {
-        println!("{}", index);
-
         let (i, j) = zeros[index];
 
         // -- get possibilities
@@ -57,7 +51,7 @@ fn main() {
             possibles.push(i);
         }
         // get possibles
-        for k in 0..9 {
+        for mut k in 0..9 {
             // remove from same row and column
             remove(&mut possibles, board[i][k]);
             remove(&mut possibles, board[k][j]);
@@ -68,8 +62,7 @@ fn main() {
             remove(&mut possibles, board[y][x]);
 
             // remove from nos
-            let k = (k + 1) as u32;
-            if nos.contains(&(index, k)) {
+            if nos[index][k] {
                 remove(&mut possibles, k);
             }
         }
@@ -87,15 +80,15 @@ fn main() {
 
         // -- if `possibles` is empty, pop stack and process next scenario
         // remove this nos
-        for k in 1..=9 {
-            nos.remove(&(index, k));
+        for k in 0..9 {
+            nos[index][k] = false;
         }
 
         // pop from stack
         let (new_index, thing) = assertions.pop().unwrap();
         let (y, x) = zeros[new_index];
         board[y][x] = 0;
-        nos.insert((new_index, thing));
+        nos[new_index][thing-1] = true;
         index = new_index;
     }
 
