@@ -4,7 +4,7 @@ fn main() {
     // get numbers
     let mut input = String::new();
     stdin().read_line(&mut input).unwrap();
-    let numbers: Vec<f32> = input
+    let numbers: Vec<f64> = input
         .trim()
         .split_whitespace()
         .map(|x| x.parse().unwrap())
@@ -15,7 +15,7 @@ fn main() {
     let delta = numbers[2];
 
     // calculate
-    let result = ((target - now) / delta as f32).ceil();
+    let result = ((target - now) / delta as f64).ceil();
     if result > 0.0 {
         println!("{}", result);
     } else {
