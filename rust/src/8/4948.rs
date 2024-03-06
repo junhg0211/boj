@@ -1,16 +1,24 @@
 use std::io::stdin;
 
+fn sqrt(number: usize) -> usize {
+    return (number as f64).sqrt() as usize;
+}
+
 fn is_prime(number: usize, sieve: &Vec<usize>) -> bool {
     for &prime in sieve.iter() {
         if number % prime == 0 {
             return false;
+        }
+
+        if sqrt(number) < prime {
+            return true;
         }
     }
 
     return true;
 }
 
-fn extend_sieve_until(number: usize, sieve: &mut Vec<usize>, count: &mut Vec<usize>) {
+fn extend_sieve_until(number: usize, sieve: &mut Vec<usize>) {
     if sieve.is_empty() {
         sieve.push(2);
     }
@@ -19,9 +27,6 @@ fn extend_sieve_until(number: usize, sieve: &mut Vec<usize>, count: &mut Vec<usi
     while sieve[sieve.len() - 1] < number {
         if is_prime(i, sieve) {
             sieve.push(i);
-            count[i] = count[i - 1] + 1;
-        } else {
-            count[i] = count[i - 1];
         }
 
         i += 1;
@@ -30,21 +35,25 @@ fn extend_sieve_until(number: usize, sieve: &mut Vec<usize>, count: &mut Vec<usi
 
 fn main() {
     let mut sieve = Vec::new();
-    let mut count = vec![1; 250000];
 
     loop {
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
         let number = input.trim().parse::<usize>().unwrap();
 
-        extend_sieve_until(number * 2, &mut sieve, &mut count);
+        extend_sieve_until(number * 2, &mut sieve);
 
         if number == 0 {
             return;
         }
 
-        let count = count[number * 2 + 1] - count[number + 1];
+        let mut result = 0;
+        for i in number + 1..=number * 2 {
+            if let Ok(_) = sieve.binary_search(&i) {
+                result += 1;
+            }
+        }
 
-        println!("{}", count);
+        println!("{}", result);
     }
 }
