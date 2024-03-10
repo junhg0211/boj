@@ -1,5 +1,5 @@
-use std::io::stdin;
 use std::collections::HashSet;
+use std::io::stdin;
 
 fn remove(from: &mut Vec<u32>, obj: u32) {
     for i in 0..from.len() {
@@ -63,8 +63,8 @@ fn main() {
             remove(&mut possibles, board[k][j]);
 
             // remove from same subsquare
-            let y = i/3*3 + k/3;
-            let x = j/3*3 + k%3;
+            let y = i / 3 * 3 + k / 3;
+            let x = j / 3 * 3 + k % 3;
             remove(&mut possibles, board[y][x]);
 
             // remove from nos
