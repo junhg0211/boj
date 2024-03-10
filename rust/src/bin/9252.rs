@@ -14,18 +14,18 @@ fn main() {
         for j in 0..b.len() {
             if a[i] == b[j] {
                 if i > 0 {
-                    dp[i][j] = dp[i-1][j].clone();
+                    dp[i][j] = dp[i - 1][j].clone();
                 }
                 dp[i][j].push(a[i]);
                 continue;
             }
 
             if i > 0 {
-                dp[i][j] = dp[i-1][j].clone();
+                dp[i][j] = dp[i - 1][j].clone();
             }
 
-            if j > 0 && dp[i][j].len() <= dp[i][j-1].len() {
-                dp[i][j] = dp[i][j-1].clone();
+            if j > 0 && dp[i][j].len() <= dp[i][j - 1].len() {
+                dp[i][j] = dp[i][j - 1].clone();
                 continue;
             }
         }
@@ -37,6 +37,6 @@ fn main() {
     }
     */
 
-    let string = &dp[a.len()-1][b.len()-1];
+    let string = &dp[a.len() - 1][b.len() - 1];
     println!("{}\n{}", string.len(), string);
 }
