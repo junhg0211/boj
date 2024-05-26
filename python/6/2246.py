@@ -1,28 +1,41 @@
 def main():
-    condos = list()
+    condos_by_d = list()
+    condos_by_c = list()
 
     count = int(input())
-    for _ in range(count):
-        condos.append(tuple(map(int, input().split())))
+    for i in range(count):
+        wow = tuple(map(int, input().split()))
+        wow += (i,)
+        condos_by_d.append(wow)
+        condos_by_c.append(wow)
 
-    result = 0
-    for i, condo in enumerate(condos):
-        is_candidate = True
-        for j, c in enumerate(condos):
-            if i == j:
-                continue
+    condos_by_d.sort(key=lambda x: x[0])
+    condos_by_c.sort(key=lambda x: x[1])
 
-            if condo[0] > c[0] and condo[1] >= c[1]:
-                is_candidate = False
+    goods = set(condos_by_d)
+
+    for i in range(count):
+        condo = condos_by_d[i]
+        for j in range(i):
+            c = condos_by_d[j]
+
+            if c[0] == condo[0]:
                 break
-            if condo[1] > c[1] and condo[0] >= c[0]:
-                is_candidate = False
+            if c[1] <= condo[1]:
+                goods.remove(condo)
                 break
 
-        if is_candidate:
-            result += 1
+    for condo in list(goods):
+        for j in range(condos_by_c.index(condo)):
+            c = condos_by_c[j]
 
-    print(result)
+            if c[1] == condo[1]:
+                break
+            if c[0] <= condo[0]:
+                goods.remove(condo)
+                break
+
+    print(len(goods))
 
 
 if __name__ == "__main__":
